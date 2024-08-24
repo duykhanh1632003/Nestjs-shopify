@@ -1,6 +1,5 @@
 import {  MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { ConfigModule } from '@nestjs/config';
-import { Configuration } from './config/configuration';
+import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerMiddleware } from './Middleware/logger.middleware';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
@@ -8,6 +7,8 @@ import { databaseProviders } from './Modules/database/database.providers';
 import { UserModule } from './Modules/user/user.module';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { HealthController } from './health/health.controller';
+import { MongooseModule } from '@nestjs/mongoose';
+import { Configuration } from './config/configuration';
 
 @Module({
   imports: [
@@ -19,15 +20,22 @@ import { HealthController } from './health/health.controller';
       ttl: 60000,
       limit: 10,
     }]),
+    UserModule,
+    MongooseModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        uri: configService.get<string>('database'),
+      }),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [HealthController],
   providers: [
-    ...databaseProviders,
     {
       provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
-    UserModule,
+    
   ],
 })
 export class AppModule implements NestModule {

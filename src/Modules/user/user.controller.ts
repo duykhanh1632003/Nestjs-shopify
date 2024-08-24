@@ -8,6 +8,11 @@ import { AuthGuard } from 'src/Middleware/auth.guard';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
+  @Get()
+    checkHealth() {
+        return { status: 'Ok' , message : 'The application is running smoothly.'}
+  }
+  
   @Post('signup')
   async signUp(@Body() createUserDto: CreateUserDto): Promise<User> {
     return this.userService.signUp(createUserDto);
