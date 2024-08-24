@@ -6,6 +6,7 @@ import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { databaseProviders } from './Modules/database/database.providers';
 import { UserModule } from './Modules/user/user.module';
+import { ThrottlerModule } from '@nestjs/throttler';
 
 @Module({
   imports: [
@@ -13,6 +14,10 @@ import { UserModule } from './Modules/user/user.module';
       load: [Configuration], // Sử dụng hàm Configuration để load cấu hình
       isGlobal: true,
     }),
+    ThrottlerModule.forRoot([{
+      ttl: 60000,
+      limit: 10,
+    }]),
   ],
   providers: [
     ...databaseProviders,
@@ -27,6 +32,6 @@ export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(LoggerMiddleware)
-      .forRoutes({ path: 'cats', method: RequestMethod.GET });
+      .forRoutes({ path: '*', method: RequestMethod.ALL });
   }
 }

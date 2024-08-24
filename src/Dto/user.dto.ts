@@ -21,3 +21,13 @@ export class CreateUserDto {
   @IsString()
   phone?: string;
 }
+
+export class SignInUserDto {
+  @IsNotEmpty()
+  @IsEmail()
+  email: string
+
+  @IsNotEmpty()
+  @IsString()
+  password: string
+}

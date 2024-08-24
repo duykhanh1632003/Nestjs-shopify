@@ -1,14 +1,26 @@
-import { Body, Controller, Post } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
-import { CreateUserDto } from './dto/create-user.dto';
+import { CreateUserDto, SignInUserDto } from 'src/Dto/user.dto';
 import { User } from '../database/schema/user.schema';
+import { AuthGuard } from 'src/Middleware/auth.guard';
 
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
-  async createUser(@Body() createUserDto: CreateUserDto): Promise<User> {
-    return this.userService.createUser(createUserDto);
+   @Post('signup')
+  async signUp(@Body() createUserDto: CreateUserDto): Promise<User> {
+    return this.userService.signUp(createUserDto);
+  }
+
+  @Post('signin')
+  async signIn(@Body() signInUserDto: SignInUserDto): Promise<{ user: User, access_token: string }> {
+    return this.userService.signIn(signInUserDto);
+  }
+
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  async getDetailOfUser(@Param('id') id: string) {
+    return this.userService.getDetailOfUser(id);
   }
 }
