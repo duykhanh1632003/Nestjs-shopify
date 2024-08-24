@@ -19,7 +19,7 @@ export class AuthGuard implements CanActivate {
 
         const user = await this.validateToken(authHeader);
         request.user = user;  // Gắn thông tin user đã xác thực vào request để sử dụng trong các controller
-
+        
         return true;
     }
 

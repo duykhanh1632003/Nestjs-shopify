@@ -9,6 +9,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { HealthController } from './health/health.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Configuration } from './config/configuration';
+import { ProductModule } from './Modules/product/product.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { Configuration } from './config/configuration';
       limit: 10,
     }]),
     UserModule,
+    ProductModule,
     MongooseModule.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
