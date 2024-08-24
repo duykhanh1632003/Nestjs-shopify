@@ -1,4 +1,4 @@
-import { Get, MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
+import {  MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { Configuration } from './config/configuration';
 import { LoggerMiddleware } from './Middleware/logger.middleware';
@@ -7,6 +7,7 @@ import { LoggingInterceptor } from './interceptors/logging.interceptor';
 import { databaseProviders } from './Modules/database/database.providers';
 import { UserModule } from './Modules/user/user.module';
 import { ThrottlerModule } from '@nestjs/throttler';
+import { HealthController } from './health/health.controller';
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { ThrottlerModule } from '@nestjs/throttler';
       limit: 10,
     }]),
   ],
+  controllers: [HealthController],
   providers: [
     ...databaseProviders,
     {
