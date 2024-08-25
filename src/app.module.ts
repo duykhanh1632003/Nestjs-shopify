@@ -3,33 +3,20 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerMiddleware } from './Middleware/logger.middleware';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
-import { databaseProviders } from './Modules/database/database.providers';
 import { UserModule } from './Modules/user/user.module';
-import { ThrottlerModule } from '@nestjs/throttler';
 import { HealthController } from './health/health.controller';
-import { MongooseModule } from '@nestjs/mongoose';
-import { Configuration } from './config/configuration';
 import { ProductModule } from './Modules/product/product.module';
+import { ConfigsModule } from './config/configs.module';
+import { DatabaseModule } from './config/database.module';
+import { ThrottlerModules } from './config/throttler.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({
-      load: [Configuration], // Sử dụng hàm Configuration để load cấu hình
-      isGlobal: true,
-    }),
-    ThrottlerModule.forRoot([{
-      ttl: 60000,
-      limit: 10,
-    }]),
+    ConfigsModule,
+    ThrottlerModules,
     UserModule,
     ProductModule,
-    MongooseModule.forRootAsync({
-      imports: [ConfigModule],
-      useFactory: async (configService: ConfigService) => ({
-        uri: configService.get<string>('database'),
-      }),
-      inject: [ConfigService],
-    }),
+    DatabaseModule,
   ],
   controllers: [HealthController],
   providers: [

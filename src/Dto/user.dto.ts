@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { IsArray, IsEmail, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
+import { Role } from '../enums/role.enum';
 
 export class CreateUserDto {
   @IsNotEmpty()
@@ -29,6 +30,10 @@ export class CreateUserDto {
   @IsOptional()
   @IsString()
   phone?: string;
+
+  @IsArray()
+  @IsOptional()
+  roles?: Role[];  // Vai trò là không bắt buộc, mặc định sẽ là 'user'
 }
 
 export class SignInUserDto {

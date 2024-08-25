@@ -45,6 +45,8 @@ $ npm run start:dev
 $ npm run start:prod
 ```
 
+npm run start:dev --watch
+
 ## Run tests
 
 ```bash
