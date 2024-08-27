@@ -1,5 +1,4 @@
 import {  MiddlewareConsumer, Module, NestModule, RequestMethod } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
 import { LoggerMiddleware } from './Middleware/logger.middleware';
 import { APP_INTERCEPTOR } from '@nestjs/core';
 import { LoggingInterceptor } from './interceptors/logging.interceptor';
@@ -9,6 +8,7 @@ import { ProductModule } from './Modules/product/product.module';
 import { ConfigsModule } from './config/configs.module';
 import { DatabaseModule } from './config/database.module';
 import { ThrottlerModules } from './config/throttler.module';
+import { CacheModules } from './cache/cache.module';
 
 @Module({
   imports: [
@@ -17,6 +17,7 @@ import { ThrottlerModules } from './config/throttler.module';
     UserModule,
     ProductModule,
     DatabaseModule,
+    CacheModules
   ],
   controllers: [HealthController],
   providers: [
