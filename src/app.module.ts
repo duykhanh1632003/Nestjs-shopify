@@ -9,6 +9,7 @@ import { ConfigsModule } from './config/configs.module';
 import { DatabaseModule } from './config/database.module';
 import { ThrottlerModules } from './config/throttler.module';
 import { CacheModules } from './cache/cache.module';
+import { OrderModule } from './Modules/orders/orders.module';
 
 @Module({
   imports: [
@@ -17,7 +18,8 @@ import { CacheModules } from './cache/cache.module';
     UserModule,
     ProductModule,
     DatabaseModule,
-    CacheModules
+    CacheModules,
+    OrderModule
   ],
   controllers: [HealthController],
   providers: [
