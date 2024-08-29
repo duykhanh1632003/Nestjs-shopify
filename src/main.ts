@@ -5,6 +5,7 @@ import { AllExceptionFilter } from './common/filters/http-exception/http-excepti
 import { CustomLogger } from './logger/custom-logger.service';
 import helmet from 'helmet';
 import * as session from 'express-session';
+import * as cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -13,6 +14,7 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const port = configService.get<number>('port') || 3000;
 
+  app.use(cookieParser());
 
   app.enableCors();
   app.useGlobalFilters(new AllExceptionFilter());

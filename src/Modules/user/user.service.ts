@@ -1,4 +1,4 @@
-import { Injectable, UnauthorizedException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { User, UserDocument } from '../database/schema/user.schema';
@@ -6,13 +6,28 @@ import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
 import { CreateUserDto, SignInUserDto } from 'src/Dto/user.dto';
 import { Role } from '../../enums/role.enum';
+import { Cron, CronExpression } from '@nestjs/schedule';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectModel(User.name) private userModel: Model<UserDocument>,
     private jwtService: JwtService
-  ) {}
+  ) { }
+  private readonly logger = new Logger(UserService.name)
+
+  @Cron(CronExpression.EVERY_2_HOURS)
+  handleCron() {
+    this.logger.debug('Called every 30 seconds');
+  }
+
+  async findByEmail(email: string): Promise<UserDocument | undefined> {
+    const user = await this.userModel.findOne({ email });
+    if (user) {
+      return user;
+    }
+    throw new NotFoundException('user not found');
+  }
 
   async signUp(createUserDto: CreateUserDto): Promise<UserDocument> {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
